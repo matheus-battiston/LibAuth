@@ -1,12 +1,11 @@
 package com.matheus.libauth.security.service;
 
 import com.matheus.libauth.security.config.AuthProperties;
+import com.matheus.libauth.security.util.KeyUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
 
 public class JwtService {
 
@@ -14,12 +13,14 @@ public class JwtService {
     private static final String EMAIL = "email";
     private static final String NOME = "nome";
 
-    private final SecretKey key;
+    private final PublicKey key;
 
     public JwtService(AuthProperties authProperties) {
-        String secret = authProperties.getJwt().getSecret();
-        if (secret == null || secret.isBlank()) throw new IllegalStateException("auth.jwt.secret nao foi configurado");
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        String publicKey = authProperties.getJwt().getPublicKey();
+        if (publicKey == null || publicKey.isBlank()) {
+            throw new IllegalStateException("auth.jwt.public-key nao foi configurado");
+        }
+        this.key = KeyUtils.getPublicKey(publicKey);
     }
 
     public Claims getClaims(String token) {

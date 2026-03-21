@@ -20,8 +20,7 @@ public class AuthProperties {
     @Setter
     @Getter
     public static class Jwt {
-        private String secret;
-        private long expiration;
-
+        private String publicKey;
+        private long expiration = 86400000;
     }
 }

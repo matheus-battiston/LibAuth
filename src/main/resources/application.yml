@@ -1,0 +1,9 @@
+auth:
+  jwt:
+    public-key: ${JWT_PUBLIC_KEY}
+    expiration: 86400000
+  public-paths:
+    - /test
+  enabled: true
+server:
+  port: 8081
