@@ -188,8 +188,6 @@ Este projeto foi criado para simular uma arquitetura mais próxima de sistemas r
 aplicações além de transformar a lógica em um módulo reutilizável para facilitar futuros desenvolvimentos em que eu utilize
 meu serviço de autenticação.
 
-##  Projeto Relacionado
-
 ## Projeto Relacionado
 
 Essa biblioteca foi utilizada no projeto **WhoThisActor**, onde é responsável por toda a validação de autenticação da API.
