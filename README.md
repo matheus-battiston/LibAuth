@@ -70,11 +70,11 @@ Essas responsabilidades pertencem ao serviço de autenticação.
 </repositories>
 
 <dependencies>
-    <dependency>
-        <groupId>com.matheus</groupId>
-        <artifactId>lib-auth</artifactId>
-        <version>0.0.1</version>
-    </dependency>
+	<dependency>
+		<groupId>com.matheus</groupId>
+		<artifactId>lib-auth</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+	</dependency>
 </dependencies>
 ```
 
