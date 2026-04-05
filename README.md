@@ -70,11 +70,11 @@ Essas responsabilidades pertencem ao serviço de autenticação.
 </repositories>
 
 <dependencies>
-    <dependency>
-        <groupId>com.matheus</groupId>
-        <artifactId>lib-auth</artifactId>
-        <version>0.0.1</version>
-    </dependency>
+	<dependency>
+		<groupId>com.matheus</groupId>
+		<artifactId>lib-auth</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+	</dependency>
 </dependencies>
 ```
 
@@ -187,8 +187,6 @@ Isso reduz acoplamento e aumenta a segurança da arquitetura.
 Este projeto foi criado para simular uma arquitetura mais próxima de sistemas reais, separando a autenticação das
 aplicações além de transformar a lógica em um módulo reutilizável para facilitar futuros desenvolvimentos em que eu utilize
 meu serviço de autenticação.
-
-##  Projeto Relacionado
 
 ## Projeto Relacionado
 
