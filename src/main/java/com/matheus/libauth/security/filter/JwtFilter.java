@@ -6,6 +6,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer";
     private static final String ESPACO = " ";
+    private static final String TOKEN = "token";
     private static final String EXPIRADO = "Token expirado";
     private static final String INVALIDO = "Token invalido";
 
@@ -43,6 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 String nome = jwtService.getUserNome(token);
 
                 UsuarioAutenticado usuario = new UsuarioAutenticado(nome, email, userId);
+
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(usuario, null, List.of());
 
@@ -63,12 +66,19 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader(AUTHORIZATION);
-        if (authHeader == null) return null;
 
-        String[] parts = authHeader.split(ESPACO);
-        if (parts.length == 2 && parts[0].equalsIgnoreCase(BEARER)) {
-            return parts[1];
+        if (request.getCookies() != null) {
+            for (var cookie : request.getCookies()) {
+                if ("token".equals(cookie.getName())) {
+                    String value = cookie.getValue();
+                    if (value != null && !value.isBlank()) return value;
+                }
+            }
+        }
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
         }
 
         return null;
