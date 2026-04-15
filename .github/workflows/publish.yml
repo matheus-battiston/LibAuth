@@ -2,10 +2,6 @@ name: Publish Maven Package
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
-
 jobs:
   publish:
     runs-on: ubuntu-latest
