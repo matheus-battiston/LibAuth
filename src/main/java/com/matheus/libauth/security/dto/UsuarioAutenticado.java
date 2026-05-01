@@ -1,16 +1,19 @@
 package com.matheus.libauth.security.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.AuthenticatedPrincipal;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioAutenticado {
+public class UsuarioAutenticado implements AuthenticatedPrincipal {
     String nome;
     String email;
     Long id;
+
+    @Override
+    public @NonNull String getName() {
+        return id.toString();
+    }
 }
