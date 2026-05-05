@@ -1,12 +1,12 @@
 package com.matheus.libauth.security.filter;
 
+import com.matheus.libauth.security.config.AuthProperties;
 import com.matheus.libauth.security.dto.UsuarioAutenticado;
 import com.matheus.libauth.security.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,16 +19,16 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer";
-    private static final String ESPACO = " ";
-    private static final String TOKEN = "token";
+    private static final String BEARER_PREFIX = "Bearer ";
     private static final String EXPIRADO = "Token expirado";
     private static final String INVALIDO = "Token invalido";
 
     private final JwtService jwtService;
+    private final AuthProperties authProperties;
 
-    public JwtFilter(JwtService jwtService) {
+    public JwtFilter(JwtService jwtService, AuthProperties authProperties) {
         this.jwtService = jwtService;
+        this.authProperties = authProperties;
     }
 
     @Override
@@ -66,20 +66,25 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private String extractToken(HttpServletRequest request) {
+        String configuredCookieName = authProperties.getCallback().getCookieName();
 
         if (request.getCookies() != null) {
             for (var cookie : request.getCookies()) {
-                if ("token".equals(cookie.getName())) {
+                String name = cookie.getName();
+
+                boolean isConfiguredCookie = configuredCookieName != null
+                        && configuredCookieName.equals(name);
+
+                if (isConfiguredCookie) {
                     String value = cookie.getValue();
                     if (value != null && !value.isBlank()) return value;
                 }
             }
         }
 
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
+        String authHeader = request.getHeader(AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX))
+            return authHeader.substring(BEARER_PREFIX.length());
 
         return null;
     }
