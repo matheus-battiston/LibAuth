@@ -2,11 +2,13 @@ package com.matheus.libauth.security.config;
 
 
 import com.matheus.libauth.security.controller.InfoUsuarioController;
+import com.matheus.libauth.security.controller.LogoutController;
 import com.matheus.libauth.security.filter.JwtFilter;
 import com.matheus.libauth.security.service.AppCookieService;
 import com.matheus.libauth.security.service.AuthTokenClient;
 import com.matheus.libauth.security.service.InfoUsuarioService;
 import com.matheus.libauth.security.service.JwtService;
+import com.matheus.libauth.security.service.LogoutService;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,8 +26,10 @@ import static org.springframework.security.config.Customizer.*;
 @AutoConfiguration
 @Import({
         OAuth2CallbackController.class,
+        LogoutController.class,
         AuthTokenClient.class,
-        AppCookieService.class
+        AppCookieService.class,
+        LogoutService.class
 })@EnableConfigurationProperties(AuthProperties.class)
 @ConditionalOnProperty(prefix = "auth", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class AuthAutoConfiguration {
@@ -64,6 +68,7 @@ public class AuthAutoConfiguration {
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(
                     "/oauth2/callback",
+                    "/auth/logout",
                     "/favicon.ico",
                     "/error"
             ).permitAll();
